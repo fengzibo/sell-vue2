@@ -28,8 +28,7 @@ module.exports = {
       'vue$': 'vue/dist/vue.common.js',
       'src': resolve('src'),
       'assets': resolve('src/assets'),
-      'components': resolve('src/components'),
-      'common': resolve('src/common')
+      'components': resolve('src/components')
     }
   },
   module: {
