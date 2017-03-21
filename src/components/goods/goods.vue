@@ -30,13 +30,16 @@
                   <span class="newPrice"><span class="unit">￥</span>{{food.price}}</span>
                   <span v-show="food.oldPrice" class="oldPrice">￥{{food.oldPrice}}</span>
                 </div>
+                <div class="cartcontrol-wrapper">
+                  <cartcontrol :food="food"></cartcontrol>
+                </div>
               </div>
             </li>
           </ul>
         </li>
       </ul>
     </div>
-    <shopcart :delivery-price="seller.deliverPrice" :min-price="seller.minPrice"></shopcart>
+    <shopcart :delivery-price="seller.deliverPrice" :min-price="seller.minPrice" :select-foods="selectFoods"></shopcart>
   </div>
 </template>
 <style lang="stylus" rel="stylesheet/stylus">
@@ -136,14 +139,17 @@
   import iconMap from 'components/iconMap/iconMap';
   import BScroll from 'better-scroll';
   import shopcart from 'components/shopCart/shopCart';
+  import cartcontrol from 'components/cartControl/cartControl';
+  import Vue from 'vue';
   const ERR_OK = 0;
+  const eventHub = new Vue();
   export default {
     props: {
       seller: Object
     },
     data() {
       return {
-        goods: {},
+        goods: [],
         listHeight: [],
         scrollY: 0
       };
@@ -158,6 +164,17 @@
           }
         }
         return 0;
+      },
+      selectFoods() {
+        let foods = [];
+        this.goods.forEach((good) => {
+          good.foods.forEach((food) => {
+            if (food.count) {
+              foods.push(food);
+            }
+          });
+        });
+        return foods;
       }
     },
     created() {
@@ -178,6 +195,7 @@
           click: true
         });
         this.foodsScroll = new BScroll(this.$refs.foodsWrapper, {
+          click: true,
           probeType: 3
         });
         this.foodsScroll.on('scroll', (pos) => {
@@ -203,7 +221,8 @@
     },
     components: {
       iconMap,
-      shopcart
+      shopcart,
+      cartcontrol
     }
   };
 </script>
